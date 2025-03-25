@@ -36,10 +36,11 @@ export const usage = `
 <hr>
 <div class="version">
 <h3>Version</h3>
-<p>1.0.2</p>
+<p>1.0.5</p>
 <ul>
 <li>接入表情包api，为ask命令添加了发图功能</li>
 <li>删除了ask.update在线更新语录库的功能，使用本地语录库</li>
+<h4><li>此版本可能存在的问题：本地语录库相对路径有一定问题，若遇到undefined，手动设定下words.json文件的路径即可</li></h4>
 
 </ul>
 <hr>
@@ -55,7 +56,7 @@ export const usage = `
 export const Config = 
   Schema.intersect([
     Schema.object({
-      sayingsUrl: Schema.string().default('./resource/words.json').description('张教授语录库地址'),
+      sayingsUrl: Schema.string().default('./resource/words.json').description('张教授语录库路径，若张教授评价为undefined，请手动定位语录库路径！'),
     }).description('基础设置'),
     Schema.object({
       sendImg: Schema.boolean().default(true).description('是否在ask之后展示张教授表情包'),
@@ -595,6 +596,9 @@ function registerCommand(ctx, config) {
       let rvwr = '';//评论者
         try {
           const randomLine = getRandomLineFromFile(`${config.sayingsUrl}`);
+          if(!randomLine){
+            await session.send("读取语录库错误，手动设定words.json文件路径后即可解决！");
+          }
           rvwr += '张教授';
           cmt += randomLine;
           if (something == '') session.sendQueued(rvwr + '的评价是：' + cmt, 1 * Time.second);
