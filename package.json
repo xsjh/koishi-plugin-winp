@@ -1,22 +1,26 @@
 {
   "name": "koishi-plugin-winp",
-  "description": "win插件带图版",
-  "version": "0.0.1",
+  "description": "我们遥遥领先！（带图版）",
+  "version": "1.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib",
-    "dist"
+    "dist",
+    "resource"
   ],
   "license": "MIT",
-  "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
-    "plugin"
+    "plugin",
+    "赢",
+    "张教授表情包"
   ],
-  "devDependencies": {},
   "peerDependencies": {
     "koishi": "^4.18.7"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3"
   }
 }
