@@ -36,7 +36,7 @@ export const usage = `
 <hr>
 <div class="version">
 <h3>Version</h3>
-<p>1.0.0</p>
+<p>1.0.2</p>
 <ul>
 <li>接入表情包api，为ask命令添加了发图功能</li>
 <li>删除了ask.update在线更新语录库的功能，使用本地语录库</li>
