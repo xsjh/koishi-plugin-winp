@@ -10,6 +10,10 @@
     "resource"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xsjh/koishi-plugin-winp"
+  },
   "keywords": [
     "chatbot",
     "koishi",
