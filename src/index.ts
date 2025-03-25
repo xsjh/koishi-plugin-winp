@@ -1,12 +1,10 @@
 import { Context, Schema, Logger, Time, $, h} from 'koishi'
 import cron from 'node-cron';
 import path from 'path';
-import { config } from 'process';
 
 export const name = 'winp'
 
 export interface Config {
-  sayingsUrl: string
   apiUrl: string
   displayFullId: boolean
   outputLogs: boolean
@@ -36,11 +34,11 @@ export const usage = `
 <hr>
 <div class="version">
 <h3>Version</h3>
-<p>1.0.5</p>
+<p>1.1.1</p>
 <ul>
 <li>接入表情包api，为ask命令添加了发图功能</li>
 <li>删除了ask.update在线更新语录库的功能，使用本地语录库</li>
-<h4><li>此版本可能存在的问题：本地语录库相对路径有一定问题，若遇到undefined，手动设定下words.json文件的路径即可</li></h4>
+<li>解决了语录库json文件的读取问题</li>
 
 </ul>
 <hr>
@@ -56,7 +54,7 @@ export const usage = `
 export const Config = 
   Schema.intersect([
     Schema.object({
-      sayingsUrl: Schema.string().default('./resource/words.json').description('张教授语录库路径，若张教授评价为undefined，请手动定位语录库路径！'),
+      displayFullId: Schema.boolean().default(false).description('是否在rank中展示群聊与用户的完整id'),
     }).description('基础设置'),
     Schema.object({
       sendImg: Schema.boolean().default(true).description('是否在ask之后展示张教授表情包'),
@@ -64,7 +62,6 @@ export const Config =
       searchNum: Schema.number().min(1).max(50).default(15).description('一次性查询的图片数量（数量越大等待时间越长）'),
     }).description('图片设置'),
     Schema.object({
-      displayFullId: Schema.boolean().default(false).description('是否在rank中展示群聊与用户的完整id'),
       outputLogs: Schema.boolean().default(false).description('日志调试模式，如有报错可开启进行排查'),
     }).description('调试设置'),
     
@@ -595,9 +592,13 @@ function registerCommand(ctx, config) {
       let cmt = '';
       let rvwr = '';//评论者
         try {
-          const randomLine = getRandomLineFromFile(`${config.sayingsUrl}`);
+          // 拼接目录
+          const projectRoot = path.resolve(__dirname, '..');
+          const wordsUrl = path.resolve(projectRoot, 'resource', 'words.json');
+          console.log('json路径：',wordsUrl);
+          const randomLine = getRandomLineFromFile(wordsUrl);
           if(!randomLine){
-            await session.send("读取语录库错误，手动设定words.json文件路径后即可解决！");
+            await session.send("读取语录库错误，请确保words.json文件在正确位置");
           }
           rvwr += '张教授';
           cmt += randomLine;
